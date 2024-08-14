@@ -23,7 +23,7 @@ localS = LocalStorage()
 async def init_local_storage():
     print("In init_local_storage")
     if localS.storedItems is None:
-        localS.storedItems = {}
+        localS.storedItems = [{}]
 
 # ----
 # Init session states from local storage
