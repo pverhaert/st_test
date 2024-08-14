@@ -18,7 +18,7 @@ with open('./assets/style.css') as f:
 load_dotenv()
 
 # init local storage
-localS = LocalStorage()
+localS = LocalStorage(pause=5)
 
 async def init_local_storage():
     print("In init_local_storage")
@@ -126,11 +126,25 @@ def stream_response(completion):
             yield chunk.choices[0].delta.content
 
 
+def test_ls():
+    if "get_val" not in st.session_state:
+        st.session_state["get_val"] = None
+
+    with st.form("get_data"):
+        st.text_input("key", key="get_local_storage_v")
+        st.form_submit_button("Submit")
+
+    if st.session_state["get_local_storage_v"] != "":
+        val_ = localS.getItem(st.session_state["get_local_storage_v"])
+        st.session_state["get_val"] = val_
+    st.write(st.session_state["get_val"])
+
 async def main():
     print("In main")
     await init_local_storage()
     await init_session_states()
     # await fetch_models_from_groq()
+    # test_ls()
 
     # Sidebar
     with st.sidebar:
