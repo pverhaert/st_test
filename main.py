@@ -125,20 +125,6 @@ def stream_response(completion):
         if chunk.choices[0].delta.content is not None:
             yield chunk.choices[0].delta.content
 
-
-def test_ls():
-    if "get_val" not in st.session_state:
-        st.session_state["get_val"] = None
-
-    with st.form("get_data"):
-        st.text_input("key", key="get_local_storage_v")
-        st.form_submit_button("Submit")
-
-    if st.session_state["get_local_storage_v"] != "":
-        val_ = localS.getItem(st.session_state["get_local_storage_v"])
-        st.session_state["get_val"] = val_
-    st.write(st.session_state["get_val"])
-
 async def main():
     print("In main")
     await init_local_storage()
