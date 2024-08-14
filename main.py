@@ -57,6 +57,7 @@ async def init_session_states():
     for key, value in default_states.items():
         if key not in st.session_state:
             st.session_state[key] = value
+    delete_O_keys()
 
 async def fetch_models_from_groq():
     print("in fetch_models_from_groq")
@@ -79,6 +80,10 @@ async def fetch_models_from_groq():
         st.error(f"Failed to fetch models: {str(e)}")
         return []
 
+def delete_O_keys():
+    for key in list(st.session_state.keys()):
+        if key.startswith('0.'):
+            del st.session_state[key]
 
 # ----
 # Functions
@@ -98,15 +103,15 @@ def update_local_storage():
         localS.setItem("my_name", st.session_state.my_name, key=str(random.random()))
         localS.setItem("groq_api_key", st.session_state.groq_api_key, key=str(random.random()))
         # Delete all keys that starts with '0.' from the session state (local storage keys start with '0.')
-        for key in list(st.session_state.keys()):
-            if key.startswith('0.'):
-                del st.session_state[key]
-    update_local_storage()
+    #     for key in list(st.session_state.keys()):
+    #         if key.startswith('0.'):
+    #             del st.session_state[key]
+    # update_local_storage()
 
 
 def update_session_states():
     prefix = f"Hello, I'm {st.session_state.my_name}. " if st.session_state.my_name != "" else ""
-    sys_prompt = textwrap.dedent(prefix + personas[st.session_state.personality])
+    sys_prompt = prefix + personas[st.session_state.personality]
     if len(st.session_state.messages) > 0:
         st.session_state.messages[0]["content"] = sys_prompt
     else:
