@@ -206,7 +206,7 @@ async def main():
             st.session_state.messages.append({"role": "assistant", "content": response})
 
     # Debug: Display session state
-    # st.write(st.session_state)
+    st.write(st.session_state)
 
 
 if __name__ == "__main__":
