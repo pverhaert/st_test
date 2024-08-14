@@ -146,7 +146,7 @@ async def main():
         else:
             if st.button("Clear API Key"):
                 update_delete_api_key(None)
-                st.rerun()
+                # st.rerun()
 
         # Models selection
         st.session_state.all_models = await fetch_models_from_groq()
@@ -169,46 +169,46 @@ async def main():
             st.session_state.messages = []
             update_session_states()
 
-    # Main chat interface
-    with open('assets/logo-tm.svg') as f:
-        st.markdown(f'<div id="main_header">{f.read()}<p>ITF Chatbot <span>(v2.0)</span></p></div>',
-                    unsafe_allow_html=True)
-
-    # Display a warning if API key is not set
-    if st.session_state.groq_api_key is None:
-        st.error("""
-      Please enter your Groq API key in the sidebar to start chatting.   
-      - Login to [Groq](https://groq.com).
-      - Go to [API Keys](https://console.groq.com/keys).
-      - Create a new API key and enjoy chatting with Groq ;-)
-      - And best of all, it's **totally free**! 🎉
-      """)
-    else:
-        # Show chat history
-        for msg in st.session_state.messages:
-            st.chat_message(msg["role"]).write(msg["content"])
-        # Set Groq client
-        client = groq.Groq(
-            api_key=st.session_state.groq_api_key,
-        )
-        # New prompt entered
-        if prompt := st.chat_input():
-            st.session_state.messages.append(
-                {"role": "user", "content": prompt}
-            )
-            st.chat_message("user").write(prompt)
-            completion = client.chat.completions.create(
-                model=st.session_state.preferred_model,
-                temperature=st.session_state.temperature,
-                stream=True,
-                max_tokens=4096,
-                messages=st.session_state.messages
-            )
-            # Stream completion
-            with st.chat_message("assistant"):
-                response = st.write_stream(stream_response(completion))
-            # Add completion to messages
-            st.session_state.messages.append({"role": "assistant", "content": response})
+    # # Main chat interface
+    # with open('assets/logo-tm.svg') as f:
+    #     st.markdown(f'<div id="main_header">{f.read()}<p>ITF Chatbot <span>(v2.0)</span></p></div>',
+    #                 unsafe_allow_html=True)
+    #
+    # # Display a warning if API key is not set
+    # if st.session_state.groq_api_key is None:
+    #     st.error("""
+    #   Please enter your Groq API key in the sidebar to start chatting.
+    #   - Login to [Groq](https://groq.com).
+    #   - Go to [API Keys](https://console.groq.com/keys).
+    #   - Create a new API key and enjoy chatting with Groq ;-)
+    #   - And best of all, it's **totally free**! 🎉
+    #   """)
+    # else:
+    #     # Show chat history
+    #     for msg in st.session_state.messages:
+    #         st.chat_message(msg["role"]).write(msg["content"])
+    #     # Set Groq client
+    #     client = groq.Groq(
+    #         api_key=st.session_state.groq_api_key,
+    #     )
+    #     # New prompt entered
+    #     if prompt := st.chat_input():
+    #         st.session_state.messages.append(
+    #             {"role": "user", "content": prompt}
+    #         )
+    #         st.chat_message("user").write(prompt)
+    #         completion = client.chat.completions.create(
+    #             model=st.session_state.preferred_model,
+    #             temperature=st.session_state.temperature,
+    #             stream=True,
+    #             max_tokens=4096,
+    #             messages=st.session_state.messages
+    #         )
+    #         # Stream completion
+    #         with st.chat_message("assistant"):
+    #             response = st.write_stream(stream_response(completion))
+    #         # Add completion to messages
+    #         st.session_state.messages.append({"role": "assistant", "content": response})
 
     # Debug: Display session state
     st.write(st.session_state)
