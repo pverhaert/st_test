@@ -6,7 +6,6 @@ import groq
 import streamlit as st
 import asyncio
 from streamlit_local_storage import LocalStorage
-from st_cookies_manager import EncryptedCookieManager
 from dotenv import load_dotenv
 from presets.personas import personas
 
